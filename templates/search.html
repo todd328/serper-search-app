@@ -1,0 +1,86 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serper Search by Todd</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-2xl font-bold mb-4 text-center">Serper Search By Todd</h1>
+            
+            <form method="POST" class="mb-4 flex">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Enter your search query" 
+                    value="{{ query }}"
+                    class="flex-grow px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <button 
+                    type="submit" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition"
+                >
+                    Search
+                </button>
+            </form>
+
+            {% if error %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            {% if results %}
+                {# Organic Search Results #}
+                {% if results.organic %}
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-3">Organic Search Results</h2>
+                    {% for result in results.organic %}
+                    <div class="mb-4 pb-4 border-b">
+                        <a 
+                            href="{{ result.link }}" 
+                            target="_blank" 
+                            class="text-blue-600 hover:underline text-lg font-medium"
+                        >
+                            {{ result.title }}
+                        </a>
+                        <p class="text-gray-600 mt-1">{{ result.snippet }}</p>
+                        <p class="text-sm text-gray-500 mt-1">{{ result.link }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {# People Also Ask #}
+                {% if results.peopleAlsoAsk %}
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-3">People Also Ask</h2>
+                    <div class="space-y-2">
+                        {% for question in results.peopleAlsoAsk %}
+                        <p class="bg-gray-100 p-3 rounded">{{ question }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {# Related Searches #}
+                {% if results.relatedSearches %}
+                <div>
+                    <h2 class="text-xl font-semibold mb-3">Related Searches</h2>
+                    <div class="flex flex-wrap gap-2">
+                        {% for search in results.relatedSearches %}
+                        <span class="bg-gray-200 px-3 py-1 rounded text-sm">
+                            {{ search }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
